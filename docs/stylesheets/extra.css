@@ -1,0 +1,32 @@
+/* 中文长文排版：系统字体栈，不依赖外部字体服务 */
+:root {
+  --md-text-font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Noto Serif SC",
+    "Songti SC", "STSong", Georgia, "PingFang SC", "Microsoft YaHei", serif;
+  --md-code-font-family: "JetBrains Mono", "SFMono-Regular", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+.md-typeset {
+  font-size: 0.9rem;
+  line-height: 1.9;
+  text-align: justify;
+  text-justify: inter-ideograph;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  line-break: strict;
+}
+.md-typeset p { margin: 0.9em 0; }
+.md-typeset h1 { font-weight: 700; letter-spacing: 0.04em; }
+.md-typeset h2 {
+  font-weight: 700;
+  margin-top: 2em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--md-default-fg-color--lightest);
+}
+.md-typeset h3 { font-weight: 600; line-height: 1.6; }
+.md-grid { max-width: 68rem; }
+.md-content { max-width: 46rem; margin: 0 auto; }
+.brief-meta { color: var(--md-default-fg-color--light); font-size: 0.8rem; }
+.md-header, .md-nav, .md-search, .md-tabs {
+  font-family: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
