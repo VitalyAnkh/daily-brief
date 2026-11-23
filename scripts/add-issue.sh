@@ -49,6 +49,9 @@ git pull --ff-only --quiet || { echo "git pull 失败，请先处理本地分支
 mkdir -p "docs/issues/$year"
 tmp="$(mktemp)"
 if head -n1 "$src" | grep -qx -- '---'; then
+  fm="$(awk 'NR==1{next} /^---$/{exit} {print}' "$src")"
+  grep -qE "^date:[[:space:]]*['\"]?${date}['\"]?[[:space:]]*$" <<<"$fm" || { echo "正文 front matter 的 date 与参数 $date 不一致" >&2; exit 1; }
+  grep -qE "^issue:[[:space:]]*${issue}[[:space:]]*$" <<<"$fm" || { echo "正文 front matter 的 issue 与参数 $issue 不一致" >&2; exit 1; }
   cp "$src" "$tmp"
 else
   month=$((10#${date:5:2})); day=$((10#${date:8:2}))
@@ -60,9 +63,18 @@ fi
 mv "$tmp" "$dest"
 chmod 644 "$dest"
 
-# 本地有 mkdocs 时先严格构建一遍，避免把坏文件推上去
-if command -v mkdocs >/dev/null 2>&1; then
-  NO_MKDOCS_2_WARNING=1 mkdocs build --strict --quiet --site-dir "$(mktemp -d)"
+# 有 mkdocs（优先用仓库内 .venv）时先严格构建一遍，避免把坏文件推上去
+mkdocs_bin=""
+if [[ -x .venv/bin/mkdocs ]]; then mkdocs_bin=.venv/bin/mkdocs
+elif command -v mkdocs >/dev/null 2>&1; then mkdocs_bin=mkdocs; fi
+if [[ -n "$mkdocs_bin" ]]; then
+  out="$(mktemp -d)"
+  if ! NO_MKDOCS_2_WARNING=1 "$mkdocs_bin" build --strict --quiet --site-dir "$out"; then
+    echo "构建失败，已写入 $dest 但未提交；修好后重跑（加 --force）" >&2; rm -rf "$out"; exit 1
+  fi
+  rm -rf "$out"
+else
+  echo "提示：没找到 mkdocs，跳过本地构建校验（CI 仍会严格构建）" >&2
 fi
 
 git add "$dest"
