@@ -17,5 +17,4 @@ export default defineConfig({
       rehypePlugins: [[rehypeKatex, { throwOnError: false, strict: 'ignore' }]],
     }),
   },
-  prefetch: { prefetchAll: false, defaultStrategy: 'hover' },
 });

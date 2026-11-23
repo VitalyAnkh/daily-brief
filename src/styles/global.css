@@ -122,3 +122,8 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
 }
 .search-box .pagefind-ui__search-clear { font-size: 0.85rem; padding: 0 0.75rem; }
 .search-box mark { background: color-mix(in srgb, var(--accent) 25%, transparent); color: inherit; }
+@media (max-width: 40rem) {
+  body { font-size: 16px; }
+  .prose { text-align: start; font-size: 1.04rem; line-height: 1.9; }
+  h1 { font-size: 1.6rem; }
+}
