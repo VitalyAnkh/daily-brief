@@ -26,11 +26,13 @@ npm run dev        # 开发预览（搜索需先 npm run build，再 npm run pre
 
 ## 字体
 
-全站衬线，“现代编辑”风格（思源宋体与 Source Serif 同出 Adobe，笔画和气质相配）：
+全站衬线（代码除外），“古典书卷”风格：
 
-- 中文：思源宋体（Noto Serif SC），用 `@fontsource/noto-serif-sc` 的 400/700 两档，按 unicode-range 切成约百个分片自托管，页面只下载用到的字；排在本机宋体之前，Mac、Windows、Linux 观感一致。后备：Source Han Serif SC、Noto Serif CJK SC、Songti SC。
-- 西文：Source Serif 4 可变字体（字重 + 光学尺寸轴，正体与斜体），拉丁子集，`public/fonts/`。
-- 代码：IBM Plex Mono（400、400 斜体、700），拉丁子集，`public/fonts/`。
+- 中文：思源宋体（Noto Serif SC），用 `@fontsource/noto-serif-sc` 的 400/700 两档，按 unicode-range 切成约百个分片自托管，页面只下载用到的字；排在本机宋体之前，各平台观感一致。后备：Source Han Serif SC、Noto Serif CJK SC、Songti SC。
+- 西文：EB Garamond 可变字体（wght 400–800，正体与斜体，真正的半粗/粗体），取自 [google/fonts](https://github.com/google/fonts/tree/main/ofl/ebgaramond)，用 fonttools 子集化为拉丁 + 拉丁扩展 A，保留 onum/lnum/tnum/smcp 等特性。`size-adjust: 112%` 补偿 Garamond 偏小的 x 字高，让夹在中文里的西文不显矮。
+- 代码：JetBrains Mono 可变字体（取自 [google/fonts](https://github.com/google/fonts/tree/main/ofl/jetbrainsmono)，同样子集化），字号 0.82em。
+- 数字：全站用齐线数字（lnum），日期另加等宽数字（tnum）以便列表对齐。正文里的数字多是日期、型号和数量，Garamond 的旧式数字 1 形如小写 ı，夹在汉字中间难认，所以旧式数字（onum）只用于斜体西文。
 - 西文字体的 unicode-range 去掉了 ‘’“”—…·，这些标点由思源宋体显示为全角。
-- 公式：KaTeX 用自带字体，字号调到 1.1em 与 Source Serif 的 x 字高对齐。
-- 许可：均为 SIL OFL 1.1，许可文本在 `public/fonts/`。
+- 公式：KaTeX 用自带字体，字号 1.04em，与放大后的 Garamond 小写字母齐平。
+- 文件：`public/fonts/` 下 `eb-garamond-roman.woff2`（约 83 KB）、`eb-garamond-italic.woff2`（约 88 KB）、`jetbrains-mono.woff2`（约 42 KB）；许可均为 SIL OFL 1.1，许可文本同在该目录。
+- 重新子集化：`pyftsubset 'EBGaramond[wght].ttf' --unicodes=<src/styles/fonts.css 里的 unicode-range> --layout-features='kern,liga,clig,calt,ccmp,locl,mark,mkmk,onum,lnum,tnum,pnum,smcp,c2sc,case,frac,numr,dnom,sups,subs,zero' --flavor=woff2 --output-file=eb-garamond-roman.woff2`，斜体与 JetBrains Mono 同理。

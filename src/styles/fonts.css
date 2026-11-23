@@ -1,34 +1,26 @@
-/* 现代编辑风：西文 Source Serif 4（可变字体，含字重与光学尺寸轴），代码 IBM Plex Mono，
-   中文思源宋体（Noto Serif SC，见 Base.astro 引入的 @fontsource 分片）。
-   字体文件取自 @fontsource 的拉丁子集，自托管于 /fonts/，均为 SIL OFL 1.1。
-   西文字体的 unicode-range 去掉了 ‘’“”—…·，这些标点交给思源宋体，中文里才是全角的样子。 */
+/* 古典书卷：西文 EB Garamond，代码 JetBrains Mono，中文思源宋体（Noto Serif SC，见 Base.astro 引入的 @fontsource 分片）。
+   西文两款取自 google/fonts 仓库的可变字体（wght 轴），用 fonttools 子集化为拉丁 + 拉丁扩展 A，
+   保留 onum/lnum/tnum/pnum/smcp/c2sc 等 OpenType 特性；自托管于 /fonts/，均为 SIL OFL 1.1。
+   unicode-range 去掉了 ‘’“”—…·，这些标点交给思源宋体，在中文里才是全角的样子。
+   Garamond 的 x 字高只有 0.40em（思源宋体里的拉丁字母约 0.51em），size-adjust 放大 12%，
+   让夹在中文里的西文不显得矮小。 */
 @font-face {
-  font-family: 'Source Serif 4 Web';
-  font-style: normal; font-weight: 200 900; font-stretch: 100%; font-display: swap;
-  src: url(/fonts/source-serif-4-opsz-normal.woff2) format('woff2-variations'), url(/fonts/source-serif-4-opsz-normal.woff2) format('woff2');
-  unicode-range: U+0000-00B6,U+00B8-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-family: 'EB Garamond Web';
+  font-style: normal; font-weight: 400 800; font-display: swap;
+  size-adjust: 112%;
+  src: url(/fonts/eb-garamond-roman.woff2) format('woff2-variations'), url(/fonts/eb-garamond-roman.woff2) format('woff2');
+  unicode-range: U+0000-00B6,U+00B8-00FF,U+0100-017F,U+0192,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FB00-FB04,U+FEFF,U+FFFD;
 }
 @font-face {
-  font-family: 'Source Serif 4 Web';
-  font-style: italic; font-weight: 200 900; font-stretch: 100%; font-display: swap;
-  src: url(/fonts/source-serif-4-opsz-italic.woff2) format('woff2-variations'), url(/fonts/source-serif-4-opsz-italic.woff2) format('woff2');
-  unicode-range: U+0000-00B6,U+00B8-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-family: 'EB Garamond Web';
+  font-style: italic; font-weight: 400 800; font-display: swap;
+  size-adjust: 112%;
+  src: url(/fonts/eb-garamond-italic.woff2) format('woff2-variations'), url(/fonts/eb-garamond-italic.woff2) format('woff2');
+  unicode-range: U+0000-00B6,U+00B8-00FF,U+0100-017F,U+0192,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FB00-FB04,U+FEFF,U+FFFD;
 }
 @font-face {
-  font-family: 'IBM Plex Mono Web';
-  font-style: normal; font-weight: 400; font-display: swap;
-  src: url(/fonts/ibm-plex-mono-latin-400-normal.woff2) format('woff2');
-  unicode-range: U+0000-00B6,U+00B8-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-@font-face {
-  font-family: 'IBM Plex Mono Web';
-  font-style: italic; font-weight: 400; font-display: swap;
-  src: url(/fonts/ibm-plex-mono-latin-400-italic.woff2) format('woff2');
-  unicode-range: U+0000-00B6,U+00B8-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-}
-@font-face {
-  font-family: 'IBM Plex Mono Web';
-  font-style: normal; font-weight: 700; font-display: swap;
-  src: url(/fonts/ibm-plex-mono-latin-700-normal.woff2) format('woff2');
-  unicode-range: U+0000-00B6,U+00B8-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  font-family: 'JetBrains Mono Web';
+  font-style: normal; font-weight: 100 800; font-display: swap;
+  src: url(/fonts/jetbrains-mono.woff2) format('woff2-variations'), url(/fonts/jetbrains-mono.woff2) format('woff2');
+  unicode-range: U+0000-00B6,U+00B8-00FF,U+0100-017F,U+0192,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-2013,U+2015-2017,U+201A-201B,U+201E-2025,U+2027-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FB00-FB04,U+FEFF,U+FFFD;
 }

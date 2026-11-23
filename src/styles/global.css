@@ -7,10 +7,10 @@
   --rule: #e4dbcd;
   --accent: #8a4b2a;
   --accent-soft: #b06a43;
-  /* 西文 Source Serif 4，中文思源宋体（自托管分片，放在本机宋体之前，各平台观感一致） */
+  /* 古典书卷：西文 EB Garamond，中文思源宋体（自托管分片，排在本机宋体之前，各平台观感一致），代码 JetBrains Mono */
   --cjk-serif: "Noto Serif SC", "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC";
-  --serif: "Source Serif 4 Web", var(--cjk-serif), serif;
-  --mono: "IBM Plex Mono Web", var(--cjk-serif), monospace;
+  --serif: "EB Garamond Web", var(--cjk-serif), serif;
+  --mono: "JetBrains Mono Web", var(--cjk-serif), monospace;
   --measure: 40rem;
   color-scheme: light;
 }
@@ -35,9 +35,10 @@ body {
   font-family: var(--serif);
   font-size: 17px;
   line-height: 1.75;
-  letter-spacing: 0.005em;
-  font-optical-sizing: auto;
+  letter-spacing: 0.01em;
   font-kerning: normal;
+  /* 全站默认齐线比例数字；日期另用等宽数字，便于上下对齐 */
+  font-variant-numeric: lining-nums proportional-nums;
   text-rendering: optimizeLegibility;
 }
 /* 浅色底用系统默认平滑；深色底用灰度平滑，避免浅字发胖 */
@@ -46,17 +47,16 @@ button, input, select, textarea { font: inherit; letter-spacing: inherit; }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 a:hover { color: var(--accent-soft); }
 .wrap { max-width: calc(var(--measure) + 3rem); margin: 0 auto; padding: 0 1.5rem; }
-.muted, time { color: var(--fg-soft); font-size: 0.875rem; }
+.muted, time { color: var(--fg-soft); font-size: 0.875rem; font-variant-numeric: lining-nums tabular-nums; }
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 1rem; top: 1rem; z-index: 10; background: var(--bg); padding: 0.25rem 0.5rem; }
 h1, h2, h3 { font-family: var(--serif); line-height: 1.4; font-weight: 600; letter-spacing: 0.02em; }
-h1 { font-weight: 700; letter-spacing: 0.01em; }
-h1 { font-size: 1.9rem; margin: 0.4em 0 0.6em; }
+h1 { font-size: 2rem; margin: 0.4em 0 0.6em; letter-spacing: 0.01em; }
 
 /* ---------- 页眉页脚 ---------- */
 .site-header { border-bottom: 1px solid var(--rule); position: sticky; top: 0; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(6px); z-index: 5; }
 .header-inner { display: flex; align-items: center; justify-content: space-between; height: 3.25rem; }
-.brand { font-family: var(--serif); font-weight: 700; font-size: 1.1rem; color: var(--fg); text-decoration: none; letter-spacing: 0.06em; }
+.brand { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; color: var(--fg); text-decoration: none; letter-spacing: 0.06em; }
 .site-header nav { display: flex; gap: 1.1rem; align-items: center; font-size: 0.95rem; }
 .site-header nav a { color: var(--fg-soft); text-decoration: none; }
 .site-header nav a:hover { color: var(--accent); }
@@ -71,7 +71,7 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
 .eyebrow { font-family: var(--serif); font-size: 0.8rem; letter-spacing: 0.18em; color: var(--fg-soft); font-weight: 600; margin: 2.5rem 0 0.75rem; }
 .latest-card { display: block; padding: 1.25rem 1.4rem; border: 1px solid var(--rule); border-radius: 10px; background: var(--bg-soft); color: var(--fg); text-decoration: none; transition: border-color 0.2s; }
 .latest-card:hover { border-color: var(--accent-soft); color: var(--fg); }
-.latest-title { display: block; font-family: var(--serif); font-size: 1.35rem; font-weight: 600; letter-spacing: 0.01em; }
+.latest-title { display: block; font-family: var(--serif); font-size: 1.4rem; font-weight: 600; letter-spacing: 0.01em; }
 .latest-card p { font-family: var(--serif); line-height: 1.85; margin: 0.6rem 0; }
 .latest-card .more { color: var(--accent); font-size: 0.9rem; }
 .issue-list { list-style: none; padding: 0; margin: 0; }
@@ -89,7 +89,7 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
   font-family: var(--serif);
   font-size: 1.125rem;
   line-height: 1.85;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.015em;
   text-align: justify;
   text-justify: inter-character;
   line-break: strict;
@@ -97,18 +97,21 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
   hanging-punctuation: allow-end;
   text-autospace: normal;
 }
+/* 正文也用齐线数字：本刊正文里数字多是日期、型号与数量（“11 月 21 日”“1700 万”“Qwen3.5-0.8B”），
+   Garamond 的旧式数字 1 形如小写 ı，夹在等高的汉字之间反而难认；旧式数字只留给纯西文的斜体引文 */
+.prose em, .prose i { font-variant-numeric: oldstyle-nums proportional-nums; }
 .prose p { margin: 0 0 1.15em; }
-.prose h2 { font-size: 1.35rem; margin: 2.4em 0 0.9em; padding-bottom: 0.3em; border-bottom: 1px solid var(--rule); scroll-margin-top: 4rem; }
-.prose h3 { font-size: 1.08rem; margin: 1.8em 0 0.5em; color: var(--fg); scroll-margin-top: 4rem; text-align: left; }
+.prose h2 { font-size: 1.4rem; margin: 2.4em 0 0.9em; padding-bottom: 0.3em; border-bottom: 1px solid var(--rule); scroll-margin-top: 4rem; }
+.prose h3 { font-size: 1.12rem; margin: 1.8em 0 0.5em; color: var(--fg); scroll-margin-top: 4rem; text-align: left; }
 .prose strong { font-weight: 600; color: var(--fg); }
 .prose ul, .prose ol { padding-left: 1.4em; }
 .prose blockquote { margin: 1.2em 0; padding: 0.2em 1em; border-left: 3px solid var(--rule); color: var(--fg-soft); }
-.prose code { font-family: var(--mono); font-size: 0.86em; letter-spacing: 0; background: var(--bg-soft); padding: 0.1em 0.3em; border-radius: 4px; }
+.prose code { font-family: var(--mono); font-size: 0.82em; font-variant-numeric: normal; letter-spacing: 0; background: var(--bg-soft); padding: 0.1em 0.3em; border-radius: 4px; }
 .prose pre { background: var(--bg-soft); padding: 1rem; overflow-x: auto; border-radius: 8px; line-height: 1.6; }
 .prose pre code { background: none; padding: 0; }
 .prose img { max-width: 100%; height: auto; }
-/* KaTeX 保留自带的 Computer Modern 系字体；Source Serif 4 的 x 字高（约 0.475em）比 KaTeX_Main（约 0.43em）高，放大到 1.1em 让小写字母齐平 */
-.prose .katex { font-size: 1.1em; letter-spacing: 0; }
+/* KaTeX 保留自带的 Computer Modern 系字体（x 字高约 0.43em）；Garamond 经 size-adjust 后约 0.45em，1.04em 让两者小写字母齐平 */
+.prose .katex { font-size: 1.04em; letter-spacing: 0; }
 .prose .katex-display { overflow-x: auto; overflow-y: hidden; }
 
 /* ---------- 翻页 ---------- */
@@ -131,6 +134,6 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
 .search-box mark { background: color-mix(in srgb, var(--accent) 25%, transparent); color: inherit; }
 @media (max-width: 40rem) {
   body { font-size: 16px; }
-  .prose { text-align: start; font-size: 1.0625rem; line-height: 1.8; }
+  .prose { text-align: start; font-size: 1.0625rem; line-height: 1.8; letter-spacing: 0.01em; }
   h1 { font-size: 1.6rem; }
 }
