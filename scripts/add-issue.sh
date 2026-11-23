@@ -35,18 +35,18 @@ date -d "$date" +%F >/dev/null 2>&1 || { echo "无效日期：$date" >&2; exit 1
 root="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$root"
 year="${date:0:4}"
-dest="docs/issues/$year/$date.md"
+dest="src/content/issues/$year/$date.md"
 
 if [[ -e "$dest" && $force -ne 1 ]]; then
   echo "$dest 已存在；如需覆盖请加 --force" >&2; exit 1
 fi
-if dup=$(grep -lE "^issue:[[:space:]]*${issue}[[:space:]]*$" docs/issues/*/*.md 2>/dev/null | grep -vx "$dest"); then
+if dup=$(grep -lE "^issue:[[:space:]]*${issue}[[:space:]]*$" src/content/issues/*/*.md 2>/dev/null | grep -vx "$dest"); then
   echo "期号 $issue 已被占用：$dup" >&2; exit 1
 fi
 
 git pull --ff-only --quiet || { echo "git pull 失败，请先处理本地分支" >&2; exit 1; }
 
-mkdir -p "docs/issues/$year"
+mkdir -p "src/content/issues/$year"
 tmp="$(mktemp)"
 if head -n1 "$src" | grep -qx -- '---'; then
   fm="$(awk 'NR==1{next} /^---$/{exit} {print}' "$src")"
@@ -63,18 +63,14 @@ fi
 mv "$tmp" "$dest"
 chmod 644 "$dest"
 
-# 有 mkdocs（优先用仓库内 .venv）时先严格构建一遍，避免把坏文件推上去
-mkdocs_bin=""
-if [[ -x .venv/bin/mkdocs ]]; then mkdocs_bin=.venv/bin/mkdocs
-elif command -v mkdocs >/dev/null 2>&1; then mkdocs_bin=mkdocs; fi
-if [[ -n "$mkdocs_bin" ]]; then
-  out="$(mktemp -d)"
-  if ! NO_MKDOCS_2_WARNING=1 "$mkdocs_bin" build --strict --quiet --site-dir "$out"; then
-    echo "构建失败，已写入 $dest 但未提交；修好后重跑（加 --force）" >&2; rm -rf "$out"; exit 1
+# 依赖已装好时先完整构建一遍（类型检查 + 构建 + 搜索索引），避免把坏文件推上去
+if [[ -d node_modules ]]; then
+  if ! ASTRO_TELEMETRY_DISABLED=1 npm run --silent build >/tmp/daily-brief-build.log 2>&1; then
+    tail -n 30 /tmp/daily-brief-build.log >&2
+    echo "构建失败，已写入 $dest 但未提交；修好后重跑（加 --force）" >&2; exit 1
   fi
-  rm -rf "$out"
 else
-  echo "提示：没找到 mkdocs，跳过本地构建校验（CI 仍会严格构建）" >&2
+  echo "提示：没有 node_modules，跳过本地构建校验（CI 仍会完整构建）。可先运行 npm ci" >&2
 fi
 
 git add "$dest"

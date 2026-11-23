@@ -1,0 +1,13 @@
+---
+import { fmtDate, issueUrl, type Issue } from '../lib/issues';
+interface Props { issues: Issue[] }
+const { issues } = Astro.props;
+---
+<ul class="issue-list">
+  {issues.map((e) => (
+    <li>
+      <a href={issueUrl(e)}>{e.data.title}</a>
+      <time datetime={e.data.date.toISOString().slice(0, 10)}>{fmtDate(e.data.date)}</time>
+    </li>
+  ))}
+</ul>

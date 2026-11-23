@@ -1,0 +1,39 @@
+---
+import { render } from 'astro:content';
+import 'katex/dist/katex.min.css';
+import Base from '../../layouts/Base.astro';
+import { getIssues, fmtDate, issueUrl, lead, type Issue } from '../../lib/issues';
+
+export async function getStaticPaths() {
+  const issues = await getIssues();
+  return issues.map((entry, i) => ({
+    params: { id: entry.id },
+    props: { entry, newer: issues[i - 1], older: issues[i + 1] },
+  }));
+}
+interface Props { entry: Issue; newer?: Issue; older?: Issue }
+const { entry, newer, older } = Astro.props;
+const { Content, headings } = await render(entry);
+const sections = headings.filter((h) => h.depth === 2);
+const iso = entry.data.date.toISOString().slice(0, 10);
+---
+<Base title={entry.data.title} description={lead(entry)} article>
+  <article class="issue" data-pagefind-body>
+    <header class="issue-header">
+      <p class="muted">第 {entry.data.issue} 期 · <time datetime={iso}>{fmtDate(entry.data.date)}</time></p>
+      <h1 data-pagefind-meta="title">{entry.data.title}</h1>
+      {sections.length > 0 && (
+        <nav class="toc" aria-label="本期栏目" data-pagefind-ignore>
+          {sections.map((h) => <a href={`#${h.slug}`}>{h.text}</a>)}
+        </nav>
+      )}
+    </header>
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+  <nav class="pager" aria-label="翻页">
+    {older ? <a rel="prev" href={issueUrl(older)}><small>上一期</small>{older.data.title}</a> : <span />}
+    {newer ? <a rel="next" href={issueUrl(newer)}><small>下一期</small>{newer.data.title}</a> : <span />}
+  </nav>
+</Base>

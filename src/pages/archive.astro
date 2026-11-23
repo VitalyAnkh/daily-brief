@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import IssueList from '../components/IssueList.astro';
+import { getIssues, type Issue } from '../lib/issues';
+const issues = await getIssues();
+const groups = new Map<string, Issue[]>();
+for (const e of issues) {
+  const key = `${e.data.date.getUTCFullYear()} 年 ${e.data.date.getUTCMonth() + 1} 月`;
+  groups.set(key, [...(groups.get(key) ?? []), e]);
+}
+---
+<Base title="归档" description="每日阅读早报全部往期">
+  <h1>归档</h1>
+  <p class="muted">共 {issues.length} 期。</p>
+  {[...groups].map(([month, list]) => (
+    <section>
+      <h2>{month}</h2>
+      <IssueList issues={list} />
+    </section>
+  ))}
+</Base>

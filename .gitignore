@@ -1,4 +1,4 @@
-site/
-.venv/
-__pycache__/
-.cache/
+node_modules/
+dist/
+.astro/
+.DS_Store

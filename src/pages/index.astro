@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import IssueList from '../components/IssueList.astro';
+import { getIssues, fmtDate, issueUrl, lead } from '../lib/issues';
+const issues = await getIssues();
+const [latest, ...rest] = issues;
+---
+<Base>
+  <section class="intro">
+    <h1>每日阅读早报</h1>
+    <p>每天早上一份：几篇爆文、五篇以内的深度文章、两本书、一个人物、一个反面观点，再加一个公众号选题。写给虚宝。</p>
+  </section>
+  {latest ? (
+    <section class="latest">
+      <h2 class="eyebrow">最新一期</h2>
+      <a class="latest-card" href={issueUrl(latest)}>
+        <span class="latest-title">{latest.data.title}</span>
+        <time datetime={latest.data.date.toISOString().slice(0, 10)}>{fmtDate(latest.data.date)}</time>
+        <p>{lead(latest)}</p>
+        <span class="more">读全文 →</span>
+      </a>
+    </section>
+  ) : <p>还没有早报。</p>}
+  {rest.length > 0 && (
+    <section>
+      <h2 class="eyebrow">近期</h2>
+      <IssueList issues={rest.slice(0, 7)} />
+      <p><a href="/archive/">全部往期 →</a></p>
+    </section>
+  )}
+</Base>

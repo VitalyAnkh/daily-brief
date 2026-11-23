@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="搜索" description="全文搜索每日阅读早报">
+  <h1>搜索</h1>
+  <div id="search" class="search-box"><noscript>搜索需要启用 JavaScript。</noscript></div>
+  <link rel="stylesheet" href="/pagefind/pagefind-ui.css" />
+  <script is:inline src="/pagefind/pagefind-ui.js"></script>
+  <script is:inline>
+    (() => {
+      const init = () => {
+        const el = document.getElementById('search');
+        if (!el || el.dataset.ready || typeof PagefindUI === 'undefined') return;
+        el.dataset.ready = '1';
+        new PagefindUI({
+          element: '#search',
+          showSubResults: true,
+          showImages: false,
+          resetStyles: false,
+          translations: { placeholder: '搜索往期早报', zero_results: '没有找到与「[SEARCH_TERM]」相关的内容' },
+        });
+        const q = new URLSearchParams(location.search).get('q');
+        const input = el.querySelector('input');
+        if (input) {
+          if (q) { input.value = q; input.dispatchEvent(new Event('input', { bubbles: true })); }
+          input.focus();
+        }
+      };
+      init();
+    })();
+  </script>
+</Base>

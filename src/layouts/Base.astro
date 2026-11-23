@@ -1,0 +1,80 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  article?: boolean;
+}
+const { title, description = '写给虚宝的每日阅读早报：爆文、深度文章、书、人物、反面观点与公众号选题。', article = false } = Astro.props;
+const siteName = '每日阅读早报';
+const fullTitle = title && title !== siteName ? `${title} · ${siteName}` : siteName;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title ?? siteName} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:url" content={canonical} />
+    <meta name="color-scheme" content="light dark" />
+    <script is:inline>
+      // 在首屏渲染前确定主题，避免闪烁；View Transitions 换页后再应用一次
+      (() => {
+        const apply = () => {
+          const saved = localStorage.getItem('theme');
+          const dark = saved ? saved === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        };
+        apply();
+        document.addEventListener('astro:after-swap', apply);
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <a class="skip" href="#main">跳到正文</a>
+    <header class="site-header">
+      <div class="wrap header-inner">
+        <a class="brand" href="/">每日阅读早报</a>
+        <nav aria-label="主导航">
+          <a href="/archive/">归档</a>
+          <a href="/search/" data-astro-reload>搜索</a>
+          <a href="/rss.xml">RSS</a>
+          <button id="theme-toggle" type="button" aria-label="切换深浅色" title="切换深浅色">
+            <svg class="sun" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4.5" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></g></svg>
+            <svg class="moon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.7 14.3A8.5 8.5 0 0 1 9.7 3.3a8.5 8.5 0 1 0 11 11z"/></svg>
+          </button>
+        </nav>
+      </div>
+    </header>
+    <main id="main" class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer wrap">
+      <p>每日阅读早报 · 写给虚宝 · <a href="https://github.com/VitalyAnkh/daily-brief">源码</a></p>
+    </footer>
+    <script>
+      function bindToggle() {
+        const btn = document.getElementById('theme-toggle');
+        btn?.addEventListener('click', () => {
+          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+          document.documentElement.dataset.theme = next;
+          localStorage.setItem('theme', next);
+        });
+      }
+      document.addEventListener('astro:page-load', bindToggle);
+    </script>
+  </body>
+</html>
