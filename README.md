@@ -22,12 +22,15 @@ npm ci
 npm run dev        # 开发预览（搜索需先 npm run build，再 npm run preview）
 ```
 
-第 1–11 期是从聊天记录回填的，措辞没有改动。分段照原样还原，原消息里的链接没能保留下来。
+第 1–11 期是从聊天记录回填的，措辞没有改动。格式与链接按原消息还原；原消息在聊天记录里被截断的中段，链接是逐条查证后补回的，查不到可靠来源的条目不加链接。
 
 ## 字体
 
-全站衬线，仿论文排版：
+全站衬线，“现代编辑”风格（思源宋体与 Source Serif 同出 Adobe，笔画和气质相配）：
 
-- 西文：Latin Modern Roman（正、斜、粗、粗斜），代码用 Latin Modern Mono。取自 CTAN `lm` 的 OTF，用 fonttools 子集化为 woff2，放在 `public/fonts/lm/`（共约 160 KB，GUST Font License）。
-- 中文：本机宋体优先（Songti SC、STSong），否则加载 `@fontsource/noto-serif-sc`（思源宋体）的 unicode-range 分片，只下载页面用到的字；再往后是 Noto Serif CJK SC、Source Han Serif SC、SimSun。
-- 公式：KaTeX 自带 Computer Modern 系字体，与 Latin Modern 同源。
+- 中文：思源宋体（Noto Serif SC），用 `@fontsource/noto-serif-sc` 的 400/700 两档，按 unicode-range 切成约百个分片自托管，页面只下载用到的字；排在本机宋体之前，Mac、Windows、Linux 观感一致。后备：Source Han Serif SC、Noto Serif CJK SC、Songti SC。
+- 西文：Source Serif 4 可变字体（字重 + 光学尺寸轴，正体与斜体），拉丁子集，`public/fonts/`。
+- 代码：IBM Plex Mono（400、400 斜体、700），拉丁子集，`public/fonts/`。
+- 西文字体的 unicode-range 去掉了 ‘’“”—…·，这些标点由思源宋体显示为全角。
+- 公式：KaTeX 用自带字体，字号调到 1.1em 与 Source Serif 的 x 字高对齐。
+- 许可：均为 SIL OFL 1.1，许可文本在 `public/fonts/`。
