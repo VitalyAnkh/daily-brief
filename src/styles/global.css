@@ -7,18 +7,17 @@
   --rule: #e4dbcd;
   --accent: #8a4b2a;
   --accent-soft: #b06a43;
-  --serif: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif CJK SC",
-    "Songti SC", "STSong", "Iowan Old Style", Georgia, serif;
-  --sans: system-ui, -apple-system, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
-    "Noto Sans SC", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
-  --mono: ui-monospace, "SFMono-Regular", "JetBrains Mono", Menlo, Consolas, monospace;
+  /* 全站衬线：西文 Latin Modern，中文宋体 */
+  --cjk-serif: "Songti SC", "STSong", "Noto Serif SC", "Noto Serif CJK SC", "Source Han Serif SC", SimSun;
+  --serif: "Latin Modern Roman", var(--cjk-serif), serif;
+  --mono: "Latin Modern Mono", var(--cjk-serif), monospace;
   --measure: 40rem;
   color-scheme: light;
 }
 :root[data-theme="dark"] {
   --bg: #171513;
   --bg-soft: #211e1b;
-  --fg: #e7e0d6;
+  --fg: #ebe5db;
   --fg-soft: #a59b8f;
   --rule: #34302b;
   --accent: #e0a37a;
@@ -33,19 +32,23 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--sans);
+  font-family: var(--serif);
   font-size: 17px;
-  line-height: 1.75;
-  -webkit-font-smoothing: antialiased;
+  line-height: 1.8;
+  letter-spacing: 0.01em;
+  font-kerning: normal;
   text-rendering: optimizeLegibility;
 }
+/* 浅色底用系统默认平滑；深色底的细笔画宋体用灰度平滑，避免发虚发胖 */
+:root[data-theme="dark"] body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+button, input, select, textarea { font: inherit; letter-spacing: inherit; }
 a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 a:hover { color: var(--accent-soft); }
 .wrap { max-width: calc(var(--measure) + 3rem); margin: 0 auto; padding: 0 1.5rem; }
 .muted, time { color: var(--fg-soft); font-size: 0.875rem; }
 .skip { position: absolute; left: -999px; }
 .skip:focus { left: 1rem; top: 1rem; z-index: 10; background: var(--bg); padding: 0.25rem 0.5rem; }
-h1, h2, h3 { font-family: var(--serif); line-height: 1.45; font-weight: 700; letter-spacing: 0.02em; }
+h1, h2, h3 { font-family: var(--serif); line-height: 1.45; font-weight: 700; letter-spacing: 0.04em; }
 h1 { font-size: 1.9rem; margin: 0.4em 0 0.6em; }
 
 /* ---------- 页眉页脚 ---------- */
@@ -63,7 +66,7 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
 
 /* ---------- 首页 / 归档 ---------- */
 .intro p { color: var(--fg-soft); font-family: var(--serif); }
-.eyebrow { font-family: var(--sans); font-size: 0.8rem; letter-spacing: 0.2em; color: var(--fg-soft); font-weight: 600; margin: 2.5rem 0 0.75rem; }
+.eyebrow { font-family: var(--serif); font-size: 0.85rem; letter-spacing: 0.24em; color: var(--fg-soft); font-weight: 700; margin: 2.5rem 0 0.75rem; }
 .latest-card { display: block; padding: 1.25rem 1.4rem; border: 1px solid var(--rule); border-radius: 10px; background: var(--bg-soft); color: var(--fg); text-decoration: none; transition: border-color 0.2s; }
 .latest-card:hover { border-color: var(--accent-soft); color: var(--fg); }
 .latest-title { display: block; font-family: var(--serif); font-size: 1.35rem; font-weight: 700; }
@@ -82,8 +85,9 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
 .toc a:hover { color: var(--accent); }
 .prose {
   font-family: var(--serif);
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   line-height: 1.95;
+  letter-spacing: 0.02em;
   text-align: justify;
   text-justify: inter-character;
   line-break: strict;
@@ -97,18 +101,19 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
 .prose strong { font-weight: 700; color: var(--fg); }
 .prose ul, .prose ol { padding-left: 1.4em; }
 .prose blockquote { margin: 1.2em 0; padding: 0.2em 1em; border-left: 3px solid var(--rule); color: var(--fg-soft); }
-.prose code { font-family: var(--mono); font-size: 0.88em; background: var(--bg-soft); padding: 0.1em 0.3em; border-radius: 4px; }
+.prose code { font-family: var(--mono); font-size: 0.95em; letter-spacing: 0; background: var(--bg-soft); padding: 0.1em 0.3em; border-radius: 4px; }
 .prose pre { background: var(--bg-soft); padding: 1rem; overflow-x: auto; border-radius: 8px; line-height: 1.6; }
 .prose pre code { background: none; padding: 0; }
 .prose img { max-width: 100%; height: auto; }
-.prose .katex { font-size: 1.05em; }
+/* KaTeX 自带 Computer Modern 系字体，与 Latin Modern 同源；1.21em 默认值是为 Times 类正文设计的，这里缩回 1.06em 以对齐 LM 的 x-height */
+.prose .katex { font-size: 1.06em; letter-spacing: 0; }
 .prose .katex-display { overflow-x: auto; overflow-y: hidden; }
 
 /* ---------- 翻页 ---------- */
 .pager { display: flex; justify-content: space-between; gap: 1rem; margin-top: 3rem; padding-top: 1.25rem; border-top: 1px solid var(--rule); }
 .pager a { display: flex; flex-direction: column; text-decoration: none; font-family: var(--serif); max-width: 48%; }
 .pager a[rel="next"] { text-align: right; margin-left: auto; }
-.pager small { color: var(--fg-soft); font-family: var(--sans); font-size: 0.78rem; }
+.pager small { color: var(--fg-soft); font-family: var(--serif); font-size: 0.78rem; }
 
 /* ---------- 搜索（Pagefind UI） ---------- */
 .search-box {
@@ -118,12 +123,12 @@ main { padding-top: 1.5rem; padding-bottom: 3rem; min-height: 70vh; }
   --pagefind-ui-background: var(--bg);
   --pagefind-ui-border: var(--rule);
   --pagefind-ui-tag: var(--bg-soft);
-  --pagefind-ui-font: var(--sans);
+  --pagefind-ui-font: var(--serif);
 }
 .search-box .pagefind-ui__search-clear { font-size: 0.85rem; padding: 0 0.75rem; }
 .search-box mark { background: color-mix(in srgb, var(--accent) 25%, transparent); color: inherit; }
 @media (max-width: 40rem) {
   body { font-size: 16px; }
-  .prose { text-align: start; font-size: 1.04rem; line-height: 1.9; }
+  .prose { text-align: start; font-size: 1.08rem; line-height: 1.9; letter-spacing: 0.015em; }
   h1 { font-size: 1.6rem; }
 }

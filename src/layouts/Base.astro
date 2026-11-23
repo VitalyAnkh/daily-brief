@@ -1,5 +1,9 @@
 ---
 import { ClientRouter } from 'astro:transitions';
+// 中文宋体后备：Noto Serif SC（思源宋体），按 unicode-range 分成约百个小分片，只下载页面用到的字
+import '@fontsource/noto-serif-sc/400.css';
+import '@fontsource/noto-serif-sc/700.css';
+import '../styles/fonts.css';
 import '../styles/global.css';
 
 interface Props {
@@ -20,6 +24,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="preload" href="/fonts/lm/lmroman10-regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
